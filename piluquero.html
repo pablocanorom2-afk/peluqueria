@@ -1,0 +1,433 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel del Peluquero | BLACK GOLD</title>
+
+  <style>
+    :root {
+      --gold: #d5ad60;
+      --bg: #101010;
+      --card: #1c1c1c;
+      --text: #f7f4ee;
+      --muted: #aaa;
+      --border: #333;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+      padding: 25px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 35px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: 2px;
+    }
+
+    .logo span, .gold {
+      color: var(--gold);
+    }
+
+    a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    .container {
+      max-width: 1150px;
+      margin: auto;
+    }
+
+    h1 {
+      font-size: clamp(27px, 5vw, 38px);
+      margin-bottom: 8px;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 15px;
+      margin: 28px 0;
+    }
+
+    .stat, .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 22px;
+    }
+
+    .stat p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .stat strong {
+      display: block;
+      color: var(--gold);
+      font-size: 32px;
+      margin-top: 8px;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: end;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
+
+    input, select, button {
+      background: #111;
+      border: 1px solid #444;
+      border-radius: 5px;
+      color: white;
+      padding: 12px;
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    button:hover {
+      border-color: var(--gold);
+    }
+
+    .gold-btn {
+      background: var(--gold);
+      color: #111;
+      border-color: var(--gold);
+      font-weight: bold;
+    }
+
+    .appointments {
+      display: grid;
+      gap: 12px;
+    }
+
+    .appointment {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--gold);
+      padding: 20px;
+      border-radius: 7px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+    }
+
+    .appointment h3 {
+      font-size: 19px;
+      margin-bottom: 8px;
+      overflow-wrap: anywhere;
+    }
+
+    .appointment p {
+      color: #ccc;
+      margin-top: 5px;
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .appointment .time {
+      color: var(--gold);
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+
+    .cancel {
+      margin-top: 12px;
+      color: #ff9999;
+      border-color: #754040;
+    }
+
+    .empty {
+      padding: 35px 15px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .notice {
+      margin-top: 25px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 650px) {
+      body {
+        padding: 17px;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .appointment {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar > * {
+        width: 100%;
+      }
+
+      .toolbar input,
+      .toolbar select,
+      .toolbar button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <header>
+      <div class="logo">BLACK <span>GOLD</span></div>
+      <a href="index.html">← Página de clientes</a>
+    </header>
+
+    <main>
+      <h1>Panel del <span class="gold">peluquero</span></h1>
+      <p class="muted">Consulta y administra tus reservas.</p>
+
+      <div class="stats">
+        <div class="stat">
+          <p>Citas de hoy</p>
+          <strong id="todayCount">0</strong>
+        </div>
+
+        <div class="stat">
+          <p>Citas pendientes</p>
+          <strong id="pendingCount">0</strong>
+        </div>
+
+        <div class="stat">
+          <p>Reservas registradas</p>
+          <strong id="totalCount">0</strong>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="toolbar">
+          <div>
+            <label for="filterDate">Filtrar por fecha</label>
+            <input type="date" id="filterDate">
+          </div>
+
+          <div>
+            <label for="filterService">Filtrar por servicio</label>
+            <select id="filterService">
+              <option value="">Todos los servicios</option>
+              <option value="Corte clásico">Corte clásico</option>
+              <option value="Degradado">Degradado</option>
+              <option value="Arreglo de barba">Arreglo de barba</option>
+              <option value="Corte + barba">Corte + barba</option>
+            </select>
+          </div>
+
+          <button id="showAll">Ver todas</button>
+          <button class="gold-btn" id="refresh">Actualizar citas</button>
+        </div>
+
+        <h2 style="font-size:21px; margin-bottom:18px">
+          Agenda de reservas
+        </h2>
+
+        <div id="appointments" class="appointments"></div>
+
+        <p class="notice">
+          Este panel de demostración lee las citas guardadas en el
+          almacenamiento local de este navegador. No es un sistema
+          online ni está protegido por una contraseña.
+        </p>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const appointmentsEl = document.getElementById("appointments");
+    const filterDate = document.getElementById("filterDate");
+    const filterService = document.getElementById("filterService");
+
+    function getBookings() {
+      try {
+        const data = JSON.parse(
+          localStorage.getItem("barberBookings") || "[]"
+        );
+
+        return Array.isArray(data) ? data : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function localDateString(date = new Date()) {
+      return [
+        date.getFullYear(),
+        String(date.getMonth() + 1).padStart(2, "0"),
+        String(date.getDate()).padStart(2, "0")
+      ].join("-");
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[char]);
+    }
+
+    function formatDate(dateString) {
+      const parts = dateString.split("-");
+
+      if (parts.length !== 3) return dateString;
+
+      return new Date(
+        Number(parts[0]),
+        Number(parts[1]) - 1,
+        Number(parts[2])
+      ).toLocaleDateString("es-ES", {
+        weekday: "short",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      });
+    }
+
+    function render() {
+      const bookings = getBookings();
+      const today = localDateString();
+
+      document.getElementById("todayCount").textContent =
+        bookings.filter(b => b.date === today).length;
+
+      document.getElementById("pendingCount").textContent =
+        bookings.filter(b => b.date >= today).length;
+
+      document.getElementById("totalCount").textContent =
+        bookings.length;
+
+      const selectedDate = filterDate.value;
+      const selectedService = filterService.value;
+
+      const filtered = bookings
+        .filter(b => !selectedDate || b.date === selectedDate)
+        .filter(b => !selectedService || b.service === selectedService)
+        .sort((a, b) =>
+          (a.date + " " + a.time).localeCompare(b.date + " " + b.time)
+        );
+
+      if (filtered.length === 0) {
+        appointmentsEl.innerHTML = `
+          <div class="empty">
+            <p>No hay citas para mostrar.</p>
+            <p style="margin-top:8px">
+              Las reservas de tu página aparecerán aquí cuando
+              se guarden en este mismo navegador.
+            </p>
+          </div>`;
+        return;
+      }
+
+      appointmentsEl.innerHTML = filtered.map(b => `
+        <article class="appointment">
+          <div>
+            <h3>${escapeHTML(b.name)}</h3>
+            <p>📞 ${escapeHTML(b.phone)}</p>
+            <p>✂️ ${escapeHTML(b.service)}</p>
+            <p>📅 ${escapeHTML(formatDate(b.date))}</p>
+            ${b.notes
+              ? `<p>📝 ${escapeHTML(b.notes)}</p>`
+              : ""}
+            <button class="cancel" data-id="${escapeHTML(b.id)}">
+              Cancelar cita
+            </button>
+          </div>
+
+          <div>
+            <div class="time">${escapeHTML(b.time)}</div>
+            <p class="muted">Hora de la cita</p>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    appointmentsEl.addEventListener("click", event => {
+      const button = event.target.closest("button[data-id]");
+
+      if (!button) return;
+
+      const id = button.dataset.id;
+
+      if (!confirm("¿Seguro que quieres cancelar esta cita?")) {
+        return;
+      }
+
+      const bookings = getBookings();
+      const updated = bookings.filter(b => String(b.id) !== id);
+
+      try {
+        localStorage.setItem("barberBookings", JSON.stringify(updated));
+        render();
+      } catch {
+        alert("No se ha podido actualizar la agenda.");
+      }
+    });
+
+    filterDate.addEventListener("change", render);
+    filterService.addEventListener("change", render);
+
+    document.getElementById("showAll").addEventListener("click", () => {
+      filterDate.value = "";
+      filterService.value = "";
+      render();
+    });
+
+    document.getElementById("refresh").addEventListener("click", render);
+
+    // Actualiza las estadísticas periódicamente al volver a la página.
+    window.addEventListener("focus", render);
+    window.addEventListener("storage", render);
+
+    render();
+  </script>
+</body>
+</html>
